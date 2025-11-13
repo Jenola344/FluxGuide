@@ -1,10 +1,12 @@
+
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { useEffect, useState } from "react";
 
-const chartData = [
+const initialChartData = [
   { month: "January", value: 10400 },
   { month: "February", value: 11200 },
   { month: "March", value: 11800 },
@@ -21,11 +23,45 @@ const chartConfig = {
 };
 
 export default function AnalyticsDashboard() {
+  const [chartData, setChartData] = useState(initialChartData);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setChartData(prevData => {
+        const lastValue = prevData[prevData.length - 1].value;
+        const newValue = lastValue + (Math.random() - 0.5) * 200;
+        const newData = [...prevData.slice(1), { month: "Now", value: newValue }];
+        
+        // This is a bit of a trick to make the chart look like it's updating continuously
+        const updatedData = newData.map((d, i) => {
+            if (i === newData.length - 2) return {...d, month: 'June'};
+            if (i < prevData.length -1 ) return initialChartData[i+1];
+            return d;
+        });
+        
+        // Remap months for display
+        const displayData = updatedData.map((d,i) => {
+          if (i === 0) return {...d, month: 'February'};
+          if (i === 1) return {...d, month: 'March'};
+          if (i === 2) return {...d, month: 'April'};
+          if (i === 3) return {...d, month: 'May'};
+          if (i === 4) return {...d, month: 'June'};
+          if (i === 5) return {...d, month: 'Now'};
+          return d;
+        });
+
+
+        return displayData;
+      });
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Card className="animate-fade-in-up" style={{animationDelay: '500ms'}}>
       <CardHeader>
         <CardTitle>Portfolio Performance</CardTitle>
-        <CardDescription>Tracking your portfolio value over the last 6 months.</CardDescription>
+        <CardDescription>Live tracking of your portfolio value.</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[300px] w-full">
@@ -44,9 +80,9 @@ export default function AnalyticsDashboard() {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
              <YAxis
+                domain={['dataMin - 500', 'dataMax + 500']}
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
@@ -65,7 +101,7 @@ export default function AnalyticsDashboard() {
               fill="url(#fillValue)"
               stroke="var(--color-value)"
               stackId="a"
-              animationDuration={1500}
+              animationDuration={1000}
             />
           </AreaChart>
         </ChartContainer>

@@ -1,3 +1,6 @@
+
+"use client";
+
 import { AreaChart, Bell, Home as HomeIcon, LineChart, Package2, Fuel } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,8 +20,34 @@ import TradeCard from "@/components/trade-card";
 import DeFiGuide from "@/components/defi-guide";
 import { Wallet } from "lucide-react";
 import WalletConnector from "@/components/wallet-connector";
+import { useAccount, useBalance, useFeeData } from "wagmi";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const { address, isConnected } = useAccount();
+  const { data: balance } = useBalance({
+    address: address,
+  });
+  const { data: feeData } = useFeeData({
+    formatUnits: 'gwei'
+  });
+
+  const [portfolioValue, setPortfolioValue] = useState(12403.56);
+  const [pnl, setPnl] = useState(250.43);
+
+  useEffect(() => {
+    // Mock real-time updates for portfolio value and P&L
+    const interval = setInterval(() => {
+      setPortfolioValue(prev => prev + (Math.random() - 0.5) * 100);
+      setPnl(prev => prev + (Math.random() - 0.5) * 10);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const ethBalance = balance ? parseFloat(balance.formatted).toFixed(4) : '0.0000';
+  const gasPrice = feeData?.formatted.gasPrice ? parseFloat(feeData.formatted.gasPrice).toFixed(2) : '0';
+  const priorityFee = feeData?.formatted.maxPriorityFeePerGas ? parseFloat(feeData.formatted.maxPriorityFeePerGas).toFixed(2) : '0';
+
   return (
     <SidebarProvider>
       <Sidebar collapsible="icon">
@@ -69,7 +98,7 @@ export default function Home() {
                   <Wallet className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">$12,403.56</div>
+                  <div className="text-2xl font-bold">${portfolioValue.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                   <p className="text-xs text-muted-foreground">+5.2% from last month</p>
                 </CardContent>
               </Card>
@@ -79,19 +108,27 @@ export default function Home() {
                   <AreaChart className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-success">+$250.43</div>
+                  <div className={`text-2xl font-bold ${pnl >= 0 ? 'text-success' : 'text-destructive'}`}>
+                    {pnl >= 0 ? '+$' : '-$'}{Math.abs(pnl).toFixed(2)}
+                  </div>
                   <p className="text-xs text-muted-foreground">+1.2% today</p>
                 </CardContent>
               </Card>
               <Card className="animate-fade-in-up" style={{animationDelay: '300ms'}}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Yield APY</CardTitle>
-                  <LineChart className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">12.5%</div>
-                  <p className="text-xs text-muted-foreground">Across all positions</p>
-                </CardContent>
+                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      {balance?.symbol} Balance
+                    </CardTitle>
+                    <LineChart className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">
+                      {isConnected ? `${ethBalance}` : "0.0000"}
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      {isConnected ? `Value: $${(parseFloat(ethBalance) * 3000).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}` : "Wallet not connected"}
+                    </p>
+                  </CardContent>
               </Card>
               <Card className="animate-fade-in-up" style={{animationDelay: '400ms'}}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -99,8 +136,8 @@ export default function Home() {
                   <Fuel className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">25</div>
-                  <p className="text-xs text-muted-foreground">Priority: 0.5 Gwei</p>
+                  <div className="text-2xl font-bold">{gasPrice}</div>
+                  <p className="text-xs text-muted-foreground">Priority: {priorityFee} Gwei</p>
                 </CardContent>
               </Card>
           </div>
