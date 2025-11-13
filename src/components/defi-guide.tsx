@@ -34,7 +34,11 @@ export default function DeFiGuide() {
 
     try {
       const result = await explainDeFiConcept({ concept: selectedConcept });
-      setExplanation(result.explanation);
+      if (result && result.explanation) {
+        setExplanation(result.explanation);
+      } else {
+        throw new Error("No explanation received.");
+      }
     } catch (e) {
       setError("Failed to get explanation. Please try again.");
       console.error(e);
@@ -49,7 +53,7 @@ export default function DeFiGuide() {
         <CardTitle>Contextual DeFi Guide</CardTitle>
         <CardDescription>AI-powered explanations for complex DeFi topics.</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 min-h-[180px]">
         <Select onValueChange={setSelectedConcept} value={selectedConcept}>
           <SelectTrigger>
             <SelectValue placeholder="Select a DeFi concept" />
@@ -70,14 +74,14 @@ export default function DeFiGuide() {
           </div>
         )}
 
-        {error && (
+        {error && !isLoading && (
             <Alert variant="destructive">
                 <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
             </Alert>
         )}
 
-        {explanation && (
+        {explanation && !isLoading && (
           <div className="rounded-lg border bg-muted/50 p-4 space-y-2 animate-fade-in-up">
             <h3 className="font-semibold text-foreground">{selectedConcept}</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">{explanation}</p>
