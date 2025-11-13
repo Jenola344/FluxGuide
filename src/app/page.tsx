@@ -58,11 +58,15 @@ export default function Home() {
             <Bell className="h-4 w-4" />
             <span className="sr-only">Toggle notifications</span>
           </Button>
-          <Button>Connect Wallet</Button>
+          <Button className="relative overflow-hidden group">
+            <span className="transition-all duration-500 ease-in-out group-hover:pr-4">Connect Wallet</span>
+            <Wallet className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 opacity-0 transition-all duration-500 ease-in-out group-hover:opacity-100" />
+            <div className="absolute inset-0 -translate-x-full transform bg-white bg-opacity-20 transition-transform duration-500 ease-in-out group-hover:translate-x-0" />
+          </Button>
         </header>
         <main className="flex-1 space-y-6 p-4 md:p-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              <Card>
+              <Card className="animate-fade-in-up" style={{animationDelay: '100ms'}}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Portfolio Value</CardTitle>
                   <Wallet className="h-4 w-4 text-muted-foreground" />
@@ -72,7 +76,7 @@ export default function Home() {
                   <p className="text-xs text-muted-foreground">+5.2% from last month</p>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="animate-fade-in-up" style={{animationDelay: '200ms'}}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">24h P&L</CardTitle>
                   <AreaChart className="h-4 w-4 text-muted-foreground" />
@@ -82,7 +86,7 @@ export default function Home() {
                   <p className="text-xs text-muted-foreground">+1.2% today</p>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="animate-fade-in-up" style={{animationDelay: '300ms'}}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Yield APY</CardTitle>
                   <LineChart className="h-4 w-4 text-muted-foreground" />
@@ -92,7 +96,7 @@ export default function Home() {
                   <p className="text-xs text-muted-foreground">Across all positions</p>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="animate-fade-in-up" style={{animationDelay: '400ms'}}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Gas Price (Gwei)</CardTitle>
                   <Fuel className="h-4 w-4 text-muted-foreground" />

@@ -44,7 +44,7 @@ export default function DeFiGuide() {
   };
 
   return (
-    <Card>
+    <Card className="animate-fade-in-up" style={{animationDelay: '700ms'}}>
       <CardHeader>
         <CardTitle>Contextual DeFi Guide</CardTitle>
         <CardDescription>AI-powered explanations for complex DeFi topics.</CardDescription>
@@ -78,7 +78,7 @@ export default function DeFiGuide() {
         )}
 
         {explanation && (
-          <div className="rounded-lg border bg-muted/50 p-4 space-y-2">
+          <div className="rounded-lg border bg-muted/50 p-4 space-y-2 animate-fade-in-up">
             <h3 className="font-semibold text-foreground">{selectedConcept}</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">{explanation}</p>
           </div>
@@ -86,7 +86,7 @@ export default function DeFiGuide() {
 
       </CardContent>
       <CardFooter>
-        <Button onClick={handleFetchExplanation} disabled={isLoading || !selectedConcept} className="w-full">
+        <Button onClick={handleFetchExplanation} disabled={isLoading || !selectedConcept} className="w-full transition-transform duration-300 hover:scale-105">
           {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
           Explain Concept
         </Button>

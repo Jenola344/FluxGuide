@@ -22,7 +22,7 @@ const chartConfig = {
 
 export default function AnalyticsDashboard() {
   return (
-    <Card>
+    <Card className="animate-fade-in-up" style={{animationDelay: '500ms'}}>
       <CardHeader>
         <CardTitle>Portfolio Performance</CardTitle>
         <CardDescription>Tracking your portfolio value over the last 6 months.</CardDescription>
@@ -65,6 +65,7 @@ export default function AnalyticsDashboard() {
               fill="url(#fillValue)"
               stroke="var(--color-value)"
               stackId="a"
+              animationDuration={1500}
             />
           </AreaChart>
         </ChartContainer>

@@ -32,7 +32,7 @@ export default function TradeCard() {
   };
 
   return (
-    <Card>
+    <Card className="animate-fade-in-up" style={{animationDelay: '600ms'}}>
       <CardHeader>
         <CardTitle>Swap Tokens</CardTitle>
         <CardDescription>Instant trades on a decentralized exchange.</CardDescription>
@@ -65,7 +65,7 @@ export default function TradeCard() {
           </div>
         </div>
         <div className="flex justify-center my-[-0.5rem]">
-            <Button variant="ghost" size="icon" onClick={handleSwapTokens} className="rounded-full border bg-card hover:bg-muted z-10">
+            <Button variant="ghost" size="icon" onClick={handleSwapTokens} className="rounded-full border bg-card hover:bg-muted z-10 transition-transform duration-300 hover:rotate-180">
                 <ArrowDown className="h-4 w-4"/>
             </Button>
         </div>
@@ -98,7 +98,7 @@ export default function TradeCard() {
         <div className="text-sm text-muted-foreground pt-2">1 ETH = 3,000.00 USDC</div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">Swap</Button>
+        <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90 transition-transform duration-300 hover:scale-105">Swap</Button>
       </CardFooter>
     </Card>
   );
